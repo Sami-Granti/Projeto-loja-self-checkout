@@ -13,6 +13,7 @@ Copie e cole o código em um compilado ou ide de sua escolha na qual python func
 
 # Referências:
 Código de vndmtrx: https://gist.github.com/vndmtrx/7657025
+
 Código de Geovana Ramos: https://github.com/GeovanaRamos/ed-cic-2023-2/blob/main/13_arvore_binaria_busca.py
 
 Está comentado os trechos copiados alterados ou criados.
