@@ -1,0 +1,470 @@
+# Classe Produto e suas funções e métodos referentes a sí.
+# Eu que fiz.
+
+class Produto:
+    def __init__(self, nome, codigo, preco, info, quant):
+        self.nome = nome
+        self.codigo = codigo
+        self.preco = float(preco)
+        self.infomacao  = info
+        self.quantidade = int(quant)
+     
+    def nome(self):
+        return sefl.nome
+    def codigo(self):
+        return self.codigo
+    def valor(self):
+        return self.preco
+    def nome(self):
+        return self.nome
+    def inf(self):
+        return self.informacao
+    def quant(self):
+        return self.quantidade
+        
+def addProduto():
+    print('Insira o Nome de seu produto')
+    nome = input()
+    print('Insira o código de seu produto')
+    codigo = input()
+    print('Insira o preço de seu produto')
+    preco = input()
+    print('Insira a informação de seu produto')
+    info = input()
+    print('Insira a quantidade de seu produto')
+    quantidade = input()
+    
+    classe = Produto(nome, codigo, preco, info, quantidade)
+    
+    return classe
+
+#-----------------------------------------------------------------
+# Classe nó e suas funções e métodos referentes a sí.
+
+# Código de vndmtrx: https://gist.github.com/vndmtrx/7657025
+# Copiado Integralmente (alterados e adaptados para as funcionaliades da classe Produto)
+
+class No:
+    def __init__(self, data):
+        self.data = data
+        self.setaFilhos(None, None)
+
+    def setaFilhos(self, esquerda, direita):
+        self.esquerda = esquerda
+        self.direita = direita
+
+    def balanco(self):
+        prof_esq = 0
+        if self.esquerda:
+            prof_esq = self.esquerda.profundidade()
+        prof_dir = 0
+        if self.direita:
+            prof_dir = self.direita.profundidade()
+        return prof_esq - prof_dir
+
+    def profundidade(self):
+        prof_esq = 0
+        if self.esquerda:
+            prof_esq = self.esquerda.profundidade()
+        prof_dir = 0
+        if self.direita:
+            prof_dir = self.direita.profundidade()
+        return 1 + max(prof_esq, prof_dir)
+
+    def rotacaoEsquerda(self):
+        self.data, self.direita.data = self.direita.data, self.data
+        old_esquerda = self.esquerda
+        self.setaFilhos(self.direita, self.direita.direita)
+        self.esquerda.setaFilhos(old_esquerda, self.esquerda.esquerda)
+
+    def rotacaoDireita(self):
+        self.data, self.esquerda.data = self.esquerda.data, self.data
+        old_direita = self.direita
+        self.setaFilhos(self.esquerda.esquerda, self.esquerda)
+        self.direita.setaFilhos(self.direita.direita, old_direita)
+
+    def rotacaoEsquerdaDireita(self):
+        self.esquerda.rotacaoEsquerda()
+        self.rotacaoDireita()
+
+    def rotacaoDireitaEsquerda(self):
+        self.direita.rotacaoDireita()
+        self.rotacaoEsquerda()
+
+    def executaBalanco(self):
+        bal = self.balanco()
+        if bal > 1:
+            if self.esquerda.balanco() > 0:
+                self.rotacaoDireita()
+            else:
+                self.rotacaoEsquerdaDireita()
+        elif bal < -1:
+            if self.direita.balanco() < 0:
+                self.rotacaoEsquerda()
+            else:
+                self.rotacaoDireitaEsquerda()
+
+    def insere(self):
+        data = addProduto()
+        if data.codigo <= self.data.codigo:
+            if not self.esquerda:
+                self.esquerda = No(data)
+            else:
+                self.esquerda.insere_r(data)
+        else:
+            if not self.direita:
+                self.direita = No(data)
+            else:
+                self.direita.insere_r(data)
+        self.executaBalanco()
+        
+    def insere_r(self, data):
+        if data.codigo <= self.data.codigo:
+            if not self.esquerda:
+                self.esquerda = No(data)
+            else:
+                self.esquerda.insere_r(data)
+        else:
+            if not self.direita:
+                self.direita = No(data)
+            else:
+                self.direita.insere_r(data)
+        self.executaBalanco()
+
+    def imprimeArvore(self):
+        print (str(self.data.nome))
+        if self.esquerda:
+            print('esquerda de ' + str(self.data.nome))
+            self.esquerda.imprimeArvore()
+        if self.direita:
+            print('direita de ' + str(self.data.nome))
+            self.direita.imprimeArvore()
+ 
+    def imprimeArvore_s(self):
+        print (str(self.data.nome))
+        if self.esquerda:
+            self.esquerda.imprimeArvore()
+        if self.direita:
+            self.direita.imprimeArvore()
+#-----------------------------------------------------------------
+# Código da Prof. Geovana Ramos: https://github.com/GeovanaRamos/ed-cic-2023-2/blob/main/13_arvore_binaria_busca.py
+# Parte referentes às linhas 36 - 61 (alteradas e adaptadas)
+            
+    def _remover(self, codigo):
+        
+        
+        if codigo < self.data.codigo:
+            self.esquerda = self.esquerda._remover(codigo)
+        elif codigo > self.data.codigo:
+            self.direita = self.direita._remover(codigo)
+        else:
+            
+            if self.esquerda is None:
+                return self.direita
+            elif self.direita is None:
+                return self.esquerda
+
+            
+            self.data = self.direita.minimo()
+            self.direita = self.direita._remover(self.data.codigo)
+
+        return self
+    
+    def minimo(self):
+        if self.esquerda is not None:
+          return minimo(self.esquerda)
+        else:
+            return self.data
+
+#------------------------------------------------------------------------------
+# Eu que fiz
+
+    def buscar(self, codigo):
+        if self.data.codigo == codigo:
+            return self
+        elif codigo < self.data.codigo:
+            if self.esquerda:
+                return self.esquerda.buscar(codigo)
+        else:
+            if self.direita:
+                return self.direita.buscar(codigo)
+            
+    def imprimeTudo(self):
+        print (str(self.data.nome) + ' ' + str(self.data.codigo) + '   Estoque: ' + str(self.data.quantidade))
+        if self.esquerda:
+            self.esquerda.imprimeTudo()
+        if self.direita:
+            self.direita.imprimeTudo()
+            
+    def cataNome(self, lista):
+        lista.append(self.data.nome)
+        if self.esquerda:
+            self.esquerda.cataNome(lista)
+        if self.direita:
+            self.direita.cataNome(lista)            
+    
+    def verNomes(self):
+        nomes = []
+        self.cataNome(nomes)
+        nomes.sort()
+        for nome in nomes:
+            print(nome)
+            
+    def check(self):
+        if self.esquerda:
+            self.esquerda.check()
+        if self.direita:
+            self.direita.check()
+        if self.data.quantidade <= 0:
+            self._remover(self.data.codigo)
+        
+
+#-----------------------------------------------------------------------------
+
+#Interface e iniciação
+# Eu que fiz
+
+
+
+raiz = None
+valor_total = 0
+
+lista_compras = []
+lista_codigos = []
+
+def adicionar_produtos_inatos():
+    global raiz
+    raiz = No(Produto('Alface', 'al', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Cebola', 'ceb', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Arroz', 'ar', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Atum', 'at', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Caqui', 'ca', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Cenoura', 'cen', '5.00', 'boa', '1'))
+    raiz.insere_r(Produto('Banana', 'ba', '5.00', 'boa', '1'))
+    
+# Menu principal
+
+def menu_inicial():
+    print("\n" * 130)
+    print('-' * 100)
+    print('Seja bem-vindo aos sistemas Self-Checkout do Big-Extra')
+    print('')
+    print('Digite 1: para gerenciar sua lista de compras.')
+    print('')
+    print('Digite 2: para chamar um gerente.')
+    print('')
+    print('Digite 3: para acessar funções de administrador.')
+    print('')
+    
+    
+    match input():
+        case '1':
+            menu_lista()
+        case '2':
+            menu_chamar()
+        case '3':
+            funcoes()
+    
+# Menu de compra
+
+def menu_lista():
+    global valor_total
+    print("\n" * 130)
+    print('-' * 100)
+    print('Para voltar ao menu inicial aperte 9')
+    print('')
+    
+    if not lista_compras:
+        print('Sua lista de compras está vazia')
+        print('')
+        print('')
+        print('')
+        print('')
+        
+    else:
+        print('Sua lista possui os seguintes itens:')
+        print('')
+        for i in range(len(lista_compras)):
+            print(lista_compras[i] + ' | com código: ' + lista_codigos[i])
+            
+        print('')
+        print('O valor total é de: R$ %.2f' % (valor_total))
+        print('')
+        print('')
+        print('')
+            
+    print('Digite 1: para adicionar um produto.')
+    print('')
+    print('Digite 2: para remover um produto.')
+    print('')
+    print('Digite 3: para finalizar a compra.')
+    print('')
+    print('Digite 4: para ver todos os produtos')
+    
+    match input():
+        case '1':
+            adicionar()
+        case '2':
+            remover()
+        case '3':
+            finalizar()
+        case '4':
+            print("\n" * 130)
+            print('-' * 100)
+            raiz.imprimeTudo()
+            print('')
+            print('')
+            print('')
+            print('Insira algo para voltar')
+            if input() != None:
+                menu_lista()
+ 
+        case '9':
+            menu_inicial()
+
+# Adicionar um produto à lista
+def adicionar():
+    global valor_total
+    global raiz
+    print("\n" * 130)
+    print('-' * 100)
+    print('Escreva o código do produto que deseja comprar ou aperte 9 para voltar')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    
+    codigo = input()
+    if codigo == '9':
+        menu_lista()
+    Item = raiz.buscar(codigo)
+    if Item == None:
+        print('')
+        print('')
+        print('')
+        print('Código inexistente, digite algo para voltar ')
+        if input() != None:
+            menu_lista()
+    else:
+        if Item.data.quantidade <= 0:
+            print('O item está esgotado')
+            print('')
+            print('')
+            print('')
+            print('Digite algo para voltar')
+            if input() != None:
+                menu_lista()
+        else:
+            lista_compras.append(Item.data.nome)
+            lista_codigos.append(Item.data.codigo)
+            Item.data.quantidade -= 1
+            valor_total += Item.data.preco
+        
+    
+            menu_lista()
+    
+        
+def remover():
+    global valor_total
+    global raiz
+    global lista_codigos
+    print("\n" * 130)
+    print('-' * 100)
+    print('Escreva o código do produto que quer remover:')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    codigo = input()
+    if codigo == '9':
+        menu_lista()
+    if codigo in lista_codigos:
+        Item = raiz.buscar(codigo)
+        Item.data.quantidade += 1
+        valor_total -= Item.data.preco
+        x = lista_codigos.index(codigo)
+        lista_codigos.pop(x)
+        lista_compras.pop(x)
+        menu_lista()
+        
+    else:
+        print("\n" * 130)
+        print('-' * 100)        
+        print('O código não existe ou não está na sua lista')
+        print('')
+        print('')
+        print('')
+        print('Digite algo para voltar')
+        if input() != None:
+            menu_lista()
+        
+ 
+def finalizar():
+    global valor_total
+    global lista_codigos
+    global lista_compras
+    
+    print("\n" * 130)
+    print('-' * 100)
+    print('O valor total foi: R$ ' + str(valor_total))
+    print('')
+    print('')
+    print('')
+    print('Escreva "Pix" para confirmar ou qualque outra coisa para cancelar')
+    if input() == 'Pix':
+        raiz.check()
+        valor_total = 0
+        lista_codigos = []
+        lista_compras = []
+        
+        menu_lista()
+        
+        
+    else:
+        menu_lista()
+        
+    
+    
+
+# Menu chamar
+def menu_chamar():
+    print("\n" * 130)
+    print('-' * 100)
+    print('Um gerente foi chamado, tempo de espera chegado para ser atendido é de: 9999999h, por favor aguarde sua chegada')
+    print('\n' * 9)
+    print('Para voltar ao menu inicial aperte 9')
+    print('')
+    if input() != None:
+        menu_lista()
+    
+
+def voltar():
+    menu_lista()
+    
+def adm():
+    funcoes()
+
+# Menu Funções de Administrador
+def funcoes():
+    print("\n" * 130)
+    print('-' * 120)
+    print('Aqui você poderar acessar as funções de administrador, podendo gerenciar a árvores de produtos diretamente.')
+    print('')
+    print('')
+    print('Há os seguintes comandos:')
+    print('Imprimir a árvore em pre-order: raiz.imprimeArvore()')
+    print('Inserir produto na árvore: raiz.insere()')
+    print('Buscar código de produto: raiz.busca(codigo)')
+    print('Remover produto pelo código: raiz._remover(codigo)')
+    print('Ver os nomes de todos produtos: raiz.verNomes()')
+    print('Ver os nomes e os códigos de todos os produtos: raiz.imprimeTudo() ')
+    print('')
+    print('Voltar para o Menu de compras: voltar()')
+    print('Voltar aqui: adm()')
+    
+adicionar_produtos_inatos()
+menu_inicial()
